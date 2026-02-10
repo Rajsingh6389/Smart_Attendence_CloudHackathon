@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, UserCheck, UserPlus, ScanFace, Info } from "lucide-react";
+import { Activity, UserCheck, UserPlus, ScanFace, Info, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Pie } from "react-chartjs-2";
 import {
@@ -191,11 +191,10 @@ const Home = () => {
             <Activity size={16} /> Dashboard
           </button>
 
-          <button className="btn">
+          <button className="btn" onClick={() => navigate("/add-student")}>
             <UserPlus size={16} /> Add Student
           </button>
 
-          {/* FIXED ABOUT BUTTON */}
           <button
             className="btn border-purple-500/40 text-purple-400 hover:border-purple-500"
             onClick={() => navigate("/about")}
@@ -230,11 +229,7 @@ const Home = () => {
 
           {/* INPUT */}
           <div className="flex flex-wrap gap-4 items-center mb-6">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImage(e.target.files[0])}
-            />
+            <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
             <button
               onClick={analyzeImage}
               disabled={analyzing}
@@ -246,7 +241,6 @@ const Home = () => {
 
           {focused !== null && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* LEFT */}
               <div>
                 <p className="text-green-400">
                   Focused Students: <b>{focused}</b>
@@ -268,7 +262,6 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* RIGHT */}
               <div className="relative w-full">
                 <img
                   ref={imageRef}
@@ -284,6 +277,21 @@ const Home = () => {
             </div>
           )}
         </div>
+
+        {/* 🔐 GLOBAL SYSTEM NOTICE (ALL PAGES APPLY) */}
+        <div className="mt-10 rounded border border-yellow-500/30 bg-yellow-500/10 p-4 text-yellow-300 text-sm">
+          <div className="flex items-start gap-2">
+            <AlertTriangle size={18} className="mt-0.5" />
+            <p>
+              <b>System Notice:</b> All modules in this application (Attendance,
+              Dashboard, Add Student, and Analysis) are designed to work with
+              camera-based face recognition executed on authorized local systems.
+              The web interface is used for control, visualization, and
+              monitoring only.
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
   );

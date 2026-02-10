@@ -1,6 +1,13 @@
 import { useState } from "react";
 import API from "./Api/api";
-import { Camera, Loader2, CheckCircle, XCircle } from "lucide-react";
+import {
+  Camera,
+  Loader2,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Attendance() {
   const [status, setStatus] = useState(null);
@@ -10,7 +17,7 @@ function Attendance() {
     setLoading(true);
     setStatus({
       type: "info",
-      text: "Camera is opening… Press ESC to stop attendance",
+      text: "Initializing attendance session…",
     });
 
     try {
@@ -19,10 +26,11 @@ function Attendance() {
         type: "success",
         text: "Attendance session completed successfully",
       });
-    } catch (error) {
+    } catch {
       setStatus({
         type: "error",
-        text: "Failed to mark attendance. Check camera or backend.",
+        text:
+          "Attendance cannot be started from the web. Camera-based face recognition runs only on authorized local systems.",
       });
     } finally {
       setLoading(false);
@@ -30,109 +38,76 @@ function Attendance() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background:
-          "linear-gradient(135deg, #020617, #020617, #020617)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "Inter, Arial, sans-serif",
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 420,
-          background: "rgba(15, 23, 42, 0.9)",
-          borderRadius: 16,
-          padding: 28,
-          boxShadow: "0 0 40px rgba(34,211,238,0.25)",
-          border: "1px solid rgba(34,211,238,0.25)",
-          color: "white",
-        }}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#020617] via-[#020617] to-black px-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-md rounded-2xl border border-cyan-500/30 bg-black/70 backdrop-blur-xl p-6 sm:p-8 shadow-[0_0_40px_rgba(34,211,238,0.25)] text-white"
       >
         {/* HEADER */}
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <Camera size={42} color="#22d3ee" />
-          <h2
-            style={{
-              marginTop: 12,
-              fontSize: 22,
-              fontWeight: 700,
-              color: "#22d3ee",
-              letterSpacing: 1,
-            }}
-          >
-            LIVE ATTENDANCE
+        <div className="text-center mb-6">
+          <div className="mx-auto w-14 h-14 rounded-full bg-cyan-500/10 flex items-center justify-center mb-3">
+            <Camera size={30} className="text-cyan-400" />
+          </div>
+          <h2 className="text-xl sm:text-2xl font-bold text-cyan-400 tracking-wide">
+            Live Attendance
           </h2>
-          <p style={{ fontSize: 14, color: "#94a3b8", marginTop: 6 }}>
+          <p className="text-sm text-slate-400 mt-1">
             Smart Face Recognition System
           </p>
         </div>
 
-        {/* STATUS MESSAGE */}
-        {status && (
-          <div
-            style={{
-              marginBottom: 18,
-              padding: "12px 14px",
-              borderRadius: 10,
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              background:
-                status.type === "success"
-                  ? "rgba(34,197,94,0.15)"
-                  : status.type === "error"
-                  ? "rgba(239,68,68,0.15)"
-                  : "rgba(234,179,8,0.15)",
-              color:
-                status.type === "success"
-                  ? "#22c55e"
-                  : status.type === "error"
-                  ? "#ef4444"
-                  : "#eab308",
-              fontSize: 14,
-              fontWeight: 600,
-            }}
-          >
-            {status.type === "success" && <CheckCircle size={18} />}
-            {status.type === "error" && <XCircle size={18} />}
-            {status.type === "info" && <Loader2 size={18} />}
-            {status.text}
+        {/* ACCESS NOTICE */}
+        <div className="mb-5 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3 text-yellow-300 text-xs sm:text-sm leading-relaxed">
+          <div className="flex items-start gap-2">
+            <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+            <span>
+              <b>Important:</b> Attendance capture requires direct camera access
+              and OpenCV execution. This feature works only on authorized local
+              systems. The web interface is for monitoring and control only.
+            </span>
           </div>
-        )}
+        </div>
+
+        {/* STATUS MESSAGE */}
+        <AnimatePresence>
+          {status && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              className={`mb-5 rounded-lg border p-3 text-sm flex items-center gap-2 ${
+                status.type === "success"
+                  ? "border-green-500/30 bg-green-500/10 text-green-400"
+                  : status.type === "error"
+                  ? "border-red-500/30 bg-red-500/10 text-red-400"
+                  : "border-cyan-500/30 bg-cyan-500/10 text-cyan-300"
+              }`}
+            >
+              {status.type === "success" && <CheckCircle size={18} />}
+              {status.type === "error" && <XCircle size={18} />}
+              {status.type === "info" && (
+                <Loader2 size={18} className="animate-spin" />
+              )}
+              {status.text}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* ACTION BUTTON */}
         <button
           onClick={startAttendance}
           disabled={loading}
-          style={{
-            width: "100%",
-            padding: "14px 16px",
-            borderRadius: 12,
-            border: "none",
-            cursor: loading ? "not-allowed" : "pointer",
-            background: loading
-              ? "#475569"
-              : "linear-gradient(135deg, #22d3ee, #0ea5e9)",
-            color: "#020617",
-            fontSize: 16,
-            fontWeight: 700,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 10,
-            transition: "all 0.3s ease",
-          }}
+          className={`w-full rounded-xl py-3 text-base font-bold flex items-center justify-center gap-2 transition-all duration-300 ${
+            loading
+              ? "bg-slate-600 cursor-not-allowed text-slate-200"
+              : "bg-gradient-to-r from-cyan-400 to-sky-500 text-black hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,211,238,0.6)]"
+          }`}
         >
           {loading ? (
             <>
-              <Loader2 className="spin" size={18} />
-              Attendance Running…
+              <Loader2 size={18} className="animate-spin" />
+              Initializing…
             </>
           ) : (
             <>
@@ -142,31 +117,12 @@ function Attendance() {
           )}
         </button>
 
-        {/* FOOTER NOTE */}
-        <p
-          style={{
-            marginTop: 18,
-            fontSize: 12,
-            color: "#64748b",
-            textAlign: "center",
-          }}
-        >
-          ℹ Camera opens on the server system. Press <b>ESC</b> to stop.
+        {/* FOOTER */}
+        <p className="mt-5 text-center text-xs text-slate-400">
+          ℹ Attendance capture runs on the <b>local system</b> with camera access.
+          Press <b>ESC</b> to stop the session.
         </p>
-      </div>
-
-      {/* SIMPLE SPINNER ANIMATION */}
-      <style>
-        {`
-          .spin {
-            animation: spin 1s linear infinite;
-          }
-          @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-        `}
-      </style>
+      </motion.div>
     </div>
   );
 }
