@@ -4,9 +4,7 @@ import { Activity, Camera, Cpu, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Dashboard() {
-  // -----------------------------
-  // STATES
-  // -----------------------------
+  // ================= STATES =================
   const [attendance, setAttendance] = useState([]);
   const [untrained, setUntrained] = useState([]);
   const [showUntrained, setShowUntrained] = useState(false);
@@ -22,9 +20,7 @@ function Dashboard() {
   const [faceCaptured, setFaceCaptured] = useState(false);
   const [uiMessage, setUiMessage] = useState(null);
 
-  // -----------------------------
-  // FETCH ATTENDANCE
-  // -----------------------------
+  // ================= FETCH ATTENDANCE =================
   const fetchAttendance = async () => {
     try {
       const res = await API.get("/dashboard", { params: filters });
@@ -42,9 +38,7 @@ function Dashboard() {
     setFilters({ course: "", department: "", batch: "", section: "" });
   };
 
-  // -----------------------------
-  // FETCH UNTRAINED STUDENTS
-  // -----------------------------
+  // ================= FETCH UNTRAINED =================
   const fetchUntrained = async () => {
     try {
       const res = await API.get("/students/untrained");
@@ -55,9 +49,7 @@ function Dashboard() {
     }
   };
 
-  // -----------------------------
-  // CAPTURE FACE
-  // -----------------------------
+  // ================= FACE CAPTURE =================
   const captureFace = async () => {
     if (!studentId) {
       setUiMessage({ type: "error", text: "Enter Student ID first" });
@@ -73,9 +65,7 @@ function Dashboard() {
     }
   };
 
-  // -----------------------------
-  // TRAIN MODEL
-  // -----------------------------
+  // ================= TRAIN MODEL =================
   const trainModel = async () => {
     if (!faceCaptured) {
       setUiMessage({ type: "error", text: "Capture face before training" });
@@ -95,11 +85,11 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-mono px-4 py-6">
-      <div className="max-w-7xl mx-auto border border-cyan-500/30 rounded p-6 bg-black/70">
+    <div className="min-h-screen bg-[#050505] text-white font-mono px-3 sm:px-6 py-6">
+      <div className="max-w-7xl mx-auto border border-cyan-500/30 rounded p-4 sm:p-6 bg-black/70">
 
         {/* TITLE */}
-        <h2 className="text-2xl font-bold text-cyan-400 mb-6 flex items-center gap-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-cyan-400 mb-6 flex items-center gap-2">
           <Activity className="animate-pulse" /> Dashboard
         </h2>
 
@@ -121,23 +111,23 @@ function Dashboard() {
           )}
         </AnimatePresence>
 
-        {/* ================= FACE TRAINING PANEL ================= */}
+        {/* ================= FACE TRAINING ================= */}
         <div className="border border-purple-500/30 rounded p-4 mb-8 bg-black/50">
-          <h3 className="text-purple-400 font-bold mb-3 flex items-center gap-2">
+          <h3 className="text-purple-400 font-bold mb-4 flex items-center gap-2">
             <AlertTriangle size={16} /> Train Face (Untrained Student)
           </h3>
 
-          <div className="flex flex-wrap gap-3 items-center">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               placeholder="Enter Student ID"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
-              className="px-3 py-2 rounded border border-gray-600 bg-black/40 text-white"
+              className="w-full sm:w-60 px-3 py-2 rounded border border-gray-600 bg-black/40 text-white"
             />
 
             <button
               onClick={captureFace}
-              className="px-4 py-2 border border-green-500 text-green-400 rounded flex items-center gap-2"
+              className="w-full sm:w-auto px-4 py-2 border border-green-500 text-green-400 rounded flex justify-center items-center gap-2"
             >
               <Camera size={16} /> Capture Face
             </button>
@@ -145,7 +135,7 @@ function Dashboard() {
             <button
               disabled={!faceCaptured}
               onClick={trainModel}
-              className={`px-4 py-2 rounded flex items-center gap-2 ${
+              className={`w-full sm:w-auto px-4 py-2 rounded flex justify-center items-center gap-2 ${
                 faceCaptured
                   ? "border border-purple-500 text-purple-400"
                   : "border border-gray-600 text-gray-500 cursor-not-allowed"
@@ -159,13 +149,13 @@ function Dashboard() {
         {/* ================= UNTRAINED STUDENTS ================= */}
         <button
           onClick={fetchUntrained}
-          className="mb-6 px-4 py-2 border border-orange-500 text-orange-400 rounded"
+          className="mb-6 px-4 py-2 border border-orange-500 text-orange-400 rounded w-full sm:w-auto"
         >
           Show Untrained Students
         </button>
 
         {showUntrained && (
-          <div className="mb-10 border border-orange-500/30 rounded p-4 bg-black/60">
+          <div className="mb-10 border border-orange-500/30 rounded p-4 bg-black/60 overflow-x-auto">
             <h3 className="text-orange-400 font-bold mb-3">
               Students Without Face Training
             </h3>
@@ -173,7 +163,7 @@ function Dashboard() {
             {untrained.length === 0 ? (
               <p className="text-green-400">✅ All students are trained</p>
             ) : (
-              <table className="w-full text-sm">
+              <table className="min-w-[900px] w-full text-xs sm:text-sm">
                 <thead className="bg-orange-600/20 text-orange-300">
                   <tr>
                     {["ID","Name","Roll","Course","Dept","Batch","Section","Status"].map(h => (
@@ -191,9 +181,7 @@ function Dashboard() {
                       <td className="px-3 py-2">{s.department}</td>
                       <td className="px-3 py-2">{s.batch}</td>
                       <td className="px-3 py-2">{s.section}</td>
-                      <td className="px-3 py-2 text-red-400 font-bold">
-                        ❌ Not Trained
-                      </td>
+                      <td className="px-3 py-2 text-red-400 font-bold">❌ Not Trained</td>
                     </tr>
                   ))}
                 </tbody>
@@ -202,8 +190,8 @@ function Dashboard() {
           </div>
         )}
 
-        {/* ================= ATTENDANCE FILTERS ================= */}
-        <div className="flex flex-wrap gap-4 mb-6">
+        {/* ================= FILTERS ================= */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           {["course", "department", "batch", "section"].map((f) => (
             <input
               key={f}
@@ -217,47 +205,49 @@ function Dashboard() {
           ))}
           <button
             onClick={fetchAttendance}
-            className="px-4 py-2 bg-green-500 text-black font-bold rounded"
+            className="bg-green-500 text-black font-bold rounded py-2"
           >
             Apply
           </button>
           <button
             onClick={resetFilters}
-            className="px-4 py-2 bg-gray-600 text-white rounded"
+            className="bg-gray-600 text-white rounded py-2"
           >
             Reset
           </button>
         </div>
 
         {/* ================= ATTENDANCE TABLE ================= */}
-        <table className="w-full text-sm">
-          <thead className="bg-gradient-to-r from-cyan-600 to-purple-600">
-            <tr>
-              {["id","Name","Roll","Course","Department","Batch","Section","Status","Time"].map(h => (
-                <th key={h} className="px-4 py-2 text-left">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {attendance.map((s, i) => (
-              <tr key={i} className={i % 2 === 0 ? "bg-black/40" : "bg-black/60"}>
-                <td className="px-4 py-2">{s.id}</td>
-                <td className="px-4 py-2">{s.name}</td>
-                <td className="px-4 py-2">{s.roll}</td>
-                <td className="px-4 py-2">{s.course}</td>
-                <td className="px-4 py-2">{s.department}</td>
-                <td className="px-4 py-2">{s.batch}</td>
-                <td className="px-4 py-2">{s.section}</td>
-                <td className={`px-4 py-2 font-bold ${
-                  s.status === "Present" ? "text-green-400" : "text-red-400"
-                }`}>
-                  {s.status}
-                </td>
-                <td className="px-4 py-2">{s.time}</td>
+        <div className="overflow-x-auto">
+          <table className="min-w-[1000px] w-full text-xs sm:text-sm">
+            <thead className="bg-gradient-to-r from-cyan-600 to-purple-600">
+              <tr>
+                {["ID","Name","Roll","Course","Department","Batch","Section","Status","Time"].map(h => (
+                  <th key={h} className="px-4 py-2 text-left">{h}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {attendance.map((s, i) => (
+                <tr key={i} className={i % 2 === 0 ? "bg-black/40" : "bg-black/60"}>
+                  <td className="px-4 py-2">{s.id}</td>
+                  <td className="px-4 py-2">{s.name}</td>
+                  <td className="px-4 py-2">{s.roll}</td>
+                  <td className="px-4 py-2">{s.course}</td>
+                  <td className="px-4 py-2">{s.department}</td>
+                  <td className="px-4 py-2">{s.batch}</td>
+                  <td className="px-4 py-2">{s.section}</td>
+                  <td className={`px-4 py-2 font-bold ${
+                    s.status === "Present" ? "text-green-400" : "text-red-400"
+                  }`}>
+                    {s.status}
+                  </td>
+                  <td className="px-4 py-2">{s.time}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
       </div>
     </div>
