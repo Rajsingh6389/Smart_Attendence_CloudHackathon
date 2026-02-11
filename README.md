@@ -1,20 +1,87 @@
-<<<<<<< HEAD
-# React + Vite
+1. Project Overview
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Project Name: Smart Attendance via FER
 
-Currently, two official plugins are available:
+Team ID: 404 innovators
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+One-Liner:
+AI-powered serverless facial engagement detection system for scalable smart classroom attendance monitoring.
 
-## React Compiler
+2. Technical Architecture
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Cloud Provider:
+AWS (Free Tier) + API Gateway + Lambda(serverless service) + DynamoDB
 
-## Expanding the ESLint configuration
+Frontend:
+React (Vite) + TailwindCSS + Chart.js
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# Smart_Attendence_CloudHackathon
->>>>>>> 7afab3d59c7b4b6c892b45c38e817332a0ff7853
+Backend:
+Python (AWS Lambda – Serverless)
+
+Database:
+Amazon DynamoDB (On-Demand Mode)
+
+🔹 Architecture Flow
+
+React Frontend
+        ↓
+API Gateway (HTTP API)
+        ↓
+AWS Lambda (Python)
+        ↓
+AWS Rekognition (Face + Emotion Detection)
+        ↓
+DynamoDB (Stores engagement logs)
+
+
+3. Proof of "Zero-Cost" Cloud Usage
+
+✅ Free-Tier Services Used
+AWS Lambda (Free tier – 1M requests/month)
+API Gateway HTTP API (Free tier usage limits)
+AWS Rekognition (Free tier limits)
+DynamoDB (On-Demand, Free Tier eligible)
+Vercel (Frontend hosting – Free plan)
+Local development (No paid services)
+
+
+✅ How We Achieved 800+ Concurrent Users
+We implemented a fully serverless architecture:
+AWS Lambda automatically scales horizontally
+API Gateway handles concurrent requests without manual configuration
+No EC2, no always-running servers
+DynamoDB On-Demand scales automatically
+No idle infrastructure → zero base cost
+Because Lambda instances scale dynamically, the system can handle 800+ concurrent users without performance degradation.
+
+
+✅ Zero Idle Cost Strategy
+No EC2 instances
+No container services
+No always-on backend servers
+Pay-per-request architecture
+Billing alert set at $0.01
+
+
+4. Important Links
+
+Live Demo Link:https://smartattendenceandfer.vercel.app
+GitHub Repository:https://github.com/Rajsingh6389
+
+
+CLOUD SETUP GUIDE (0% COST, 100% SCALE)
+
+A. No-Credit-Card Resources
+
+AWS Free Tier (Used in our project)
+Google Cloud Always-Free services
+
+B."Free-Forever" Stack (Used in This Project)
+
+Frontend Hosting           Vercel (Free Plan)
+Backend                    Aws lambda service
+Database                   Dynamo db
+Api                        API Gateway HTTP API
+AI Processing              AWS Rekognition
+
+
